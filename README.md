@@ -162,7 +162,7 @@ This framework enables CX and Customer Success teams to:
 ---
 
 ## Repository Structure
-
+```
 churnsense/
 ├── data/
 │ ├── raw/ # Original Kaggle dataset
@@ -179,7 +179,7 @@ churnsense/
 │ └── image-1.png # Dashboard page 2
 ├── README.md
 └── requirements.txt
-
+```
 
 ---
 
