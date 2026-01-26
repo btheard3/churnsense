@@ -1,208 +1,207 @@
-ChurnSense
+# ChurnSense — Capacity-Constrained Retention Targeting
 
-Capacity-Constrained Retention Targeting | Decision-Support Analytics
+> **Decision-support system for customer retention under real-world operational constraints.**  
+> Optimizes which customers to contact when outreach capacity is limited by maximizing **expected retained value**, not just churn risk.
 
-Overview
+---
 
-ChurnSense is a decision-support analytics project that demonstrates how customer retention strategies change under real-world capacity constraints.
+## Executive Summary
 
-Rather than optimizing for churn risk alone, this project reframes churn analytics as a value-maximization problem, aligning outreach decisions with limited operational capacity.
+Most churn models stop at prediction.  
+**ChurnSense goes further** — translating churn risk into **actionable, capacity-aware decisions** for Customer Experience and Success teams.
 
-The solution is implemented as an interactive Power BI dashboard designed to support business reviews, prioritization discussions, and what-if scenario analysis.
+Instead of asking *“Who is most likely to churn?”*, this project answers:
 
-Business Problem
+> **“Given limited outreach capacity, which customers should we contact to maximize retained value?”**
 
-Customer Experience and Success teams operate under finite outreach capacity (e.g., call center volume, account manager bandwidth, campaign limits).
+The result is a decision framework that aligns analytics with operational reality.
 
-Traditional churn models rank customers by likelihood to churn, but this approach fails to answer a critical operational question:
+---
 
-Who should we contact first when we cannot contact everyone?
+## Business Problem
 
-Without incorporating customer value, teams risk allocating scarce resources to high-risk but low-impact accounts, reducing overall business outcomes.
+Customer Success and CX teams face **hard constraints**:
+- Limited agent capacity
+- Fixed outreach budgets
+- Time-bound intervention windows
 
-Business Question
+Traditional churn models rank customers by **risk alone**, which often:
+- Over-prioritizes low-value accounts
+- Misallocates scarce outreach resources
+- Fails to maximize ROI per contact
 
-Given limited outreach capacity, which customers should be prioritized to maximize retained expected value?
+---
 
-Solution Summary
+## Business Question
 
-ChurnSense treats retention targeting as a capacity-constrained optimization problem by:
+> **Given limited outreach capacity, which customers should be contacted to maximize retained expected value?**
 
-Ranking customers by Expected Value (EV) rather than churn risk alone
+This reframes churn from a **prediction problem** into a **decision optimization problem**.
 
-Simulating fixed outreach capacity scenarios
+---
 
-Quantifying value captured vs. value left on the table
+## Data
 
-Supporting transparent, data-driven prioritization decisions
-
-This aligns analytics output directly with business execution and operational planning.
-
-Data
-
-Source:
-Telco Customer Churn Dataset — Kaggle
+**Dataset:** Telco Customer Churn  
+**Source:** Kaggle  
 https://www.kaggle.com/datasets/rhonarosecortez/telco-customer-churn
 
-Dataset Characteristics:
+**Description:**
+- 7,043 customer records
+- Contract type, tenure, services, payment method
+- Monthly charges and churn outcomes
 
-7,043 customer records
+**Why this data works:**
+- Realistic CX / subscription business structure
+- Supports risk modeling *and* value-based decisioning
+- Commonly used in industry, easy to contextualize for interviews
 
-Demographics, service usage, contract attributes
+---
 
-Billing data and churn outcomes
+## Analytical Approach
 
-Key Fields Used:
+### 1. Churn Risk Modeling
+- Trained a baseline churn classifier
+- Generated individual **churn probabilities (`p_churn`)**
 
-Churn
+### 2. Expected Value (EV) Framework
+For each customer:
 
-MonthlyCharges
+Expected Value = p_churn × customer_value
 
-tenure
 
-Contract
+This converts raw risk into **recoverable value**.
 
-InternetService
+### 3. Capacity-Constrained Selection
+- Customers ranked by **Expected Value**
+- Outreach simulated under a fixed capacity (e.g., 500 customers)
+- Customers selected until capacity is reached
 
-Engineered Features:
+---
 
-Churn probability proxy (p_churn)
+## Decision Framework
 
-Expected Value (EV)
+ChurnSense formalizes retention targeting as:
 
-Risk deciles
+> **Value-weighted prioritization under operational constraints**
 
-Eligibility flags
+This allows CX leaders to:
+- See marginal returns of additional outreach
+- Understand tradeoffs between risk, value, and capacity
+- Justify decisions with transparent metrics
 
-EV-based customer rank
+---
 
-Analytical Approach
-1. Expected Value Modeling
+## Dashboard Walkthrough (Power BI)
 
-Customer prioritization is based on Expected Value, defined as:
+### Page 1 — Capacity-Constrained Retention Targeting
 
-Expected Value = Churn Probability × Retention Value Proxy
+![Capacity-Constrained Retention Targeting](images/image.png)
 
+**What this shows:**
+- Total accounts vs. eligible accounts
+- Fixed outreach capacity (what-if)
+- Total expected retention value
+- EV captured within capacity
+- Coverage of eligible population
 
-This converts churn prediction into a business-relevant decision metric.
+**Key takeaway:**  
+A relatively small subset of customers captures a disproportionate share of retention value.
 
-2. Risk Segmentation
+---
 
-Customers are segmented into risk deciles to analyze how churn risk and value interact.
+### Page 2 — Decision Logic & Tradeoffs
 
-Key insight:
+![Decision Logic & Tradeoffs](images/image-1.png)
 
-High churn risk does not necessarily imply high recoverable value.
+#### Expected Value by Churn Risk Decile
+- Customers evenly distributed across risk deciles
+- **Value is heavily concentrated in top EV deciles**
 
-3. Capacity-Constrained Selection
+#### Cumulative Expected Value vs. Outreach Volume
+- Customers ranked by EV (highest first)
+- Vertical line marks outreach capacity
+- **Diminishing returns beyond capacity**
 
-Outreach capacity is treated as a hard operational constraint
+#### EV Captured vs. Left on the Table
+- Clear visualization of:
+  - Value captured within capacity
+  - Value forfeited due to constraints
 
-Customers are ranked by Expected Value (highest first)
+---
 
-Cumulative EV is calculated as capacity increases
+## Key Insights
 
-Diminishing returns beyond capacity are explicitly measured
+- **Expected value is not evenly distributed**, even when risk is
+- **Risk-only targeting misallocates scarce outreach capacity**
+- **Most retention value is captured early**
+- Marginal returns flatten rapidly beyond optimal capacity
+- Analytics must align with **operational constraints**, not just model accuracy
 
-Dashboard Pages
-Page 1 — Capacity-Constrained Retention Targeting
+---
 
-Purpose:
-Enable decision-makers to understand how much value can realistically be captured given current outreach limits.
+## Business Impact
 
-Key Metrics:
+This framework enables CX and Customer Success teams to:
 
-Total Accounts
+- Treat customer outreach as a **data product**
+- Maximize ROI per contact under fixed capacity
+- Make defensible, transparent prioritization decisions
+- Communicate tradeoffs clearly to executives and stakeholders
 
-Eligible Accounts
+---
 
-Accounts Contacted (Capacity)
+## Tech Stack
 
-Total Expected Value
+- **Python** — modeling, feature engineering
+- **scikit-learn** — baseline churn model
+- **Pandas / NumPy** — data processing
+- **Power BI** — decision dashboards & what-if analysis
+- **GitHub** — version control and documentation
 
-Expected Value Captured
+---
 
-Coverage of Eligible Customers
+## Repository Structure
 
-Primary Insight:
-A relatively small subset of customers captures a disproportionate share of total retention value.
+churnsense/
+├── data/
+│ ├── raw/ # Original Kaggle dataset
+│ └── processed/ # Feature-engineered data
+├── notebooks/
+│ ├── 01_eda_and_data_quality.ipynb
+│ ├── 02_baseline_modeling.ipynb
+│ ├── 03_feature_engineering.ipynb
+│ └── 04_decision_policy_simulation.ipynb
+├── models/
+│ └── baseline_logreg.joblib
+├── images/
+│ ├── image.png # Dashboard page 1
+│ └── image-1.png # Dashboard page 2
+├── README.md
+└── requirements.txt
 
-![Capacity-Constrained Retention Targeting](image.png)
 
-Page 2 — Decision Logic & Tradeoffs
+---
 
-Purpose:
-Explain why EV-based prioritization outperforms risk-only approaches.
+## Why This Project Matters
 
-Key Visuals:
+ChurnSense demonstrates the difference between:
+- **Predictive analytics** and **decision analytics**
+- **Model performance** and **business impact**
 
-Expected Value by Risk Decile
+It reflects how real CX, BI, and Decision Science teams operate:
+> Analytics exists to **inform action under constraints**, not just generate scores.
 
-Cumulative Expected Value vs. Outreach Volume
+---
 
-Expected Value Captured vs. Left on the Table
+## Next Extensions
 
-Primary Insight:
-Most retention value is captured early; marginal returns flatten rapidly beyond outreach capacity.
+- Profit-aware retention modeling
+- Channel-specific intervention costs
+- SLA-aware outreach optimization
+- Integration with SupportOps (ticket-based prioritization)
 
-![Decision Logic and Tradeoffs](image-1.png)
+---
 
-Key Insights
-
-Expected value is heavily concentrated in top-ranked customers
-
-Risk-only targeting misallocates limited outreach resources
-
-Capacity-aware prioritization improves ROI per contact
-
-Analytics must align with operational constraints, not just model accuracy
-
-Business Impact
-
-This framework enables Customer Experience and Success teams to:
-
-Treat customer outreach as a data product
-
-Support executive decision-making with transparent metrics
-
-Align analytics with operational capacity and SLA realities
-
-Improve retention ROI without increasing headcount
-
-Tools & Technologies
-
-Power BI
-
-DAX measures
-
-What-if parameters
-
-Interactive filtering
-
-Data Modeling
-
-Business-rule-driven feature engineering
-
-GitHub
-
-Version-controlled analytics project
-
-Repository Structure
-
-
-Future Enhancements
-
-Replace probability proxy with trained churn model
-
-Incorporate contact cost and channel effectiveness
-
-Add uplift modeling for treatment optimization
-
-Deploy via Power BI Service with governance and RLS
-
-Author
-
-Brandon Theard
-Business Intelligence | Decision-Support Analytics | Data Science
-
-This project is designed to reflect how analytics supports real-world business decisions under uncertainty, aligned with Customer Experience & Success (CE&S) use cases.
+**Author:** Brandon Theard  
+**Focus:** Decision Support • Business Intelligence • Customer Analytics
